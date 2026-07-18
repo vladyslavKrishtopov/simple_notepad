@@ -51,3 +51,7 @@ simple_notepad.exe C:\path\to\file.txt
 
 - The build uses `-mwindows`, so the app starts as a GUI program (no console window).
 - Saved files are written as UTF-8 without BOM.
+
+## Attributions
+
+- <a href="https://www.flaticon.com/free-icons/notepad" title="notepad icons">Notepad icons created by Magnific - Flaticon</a>

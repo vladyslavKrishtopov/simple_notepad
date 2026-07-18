@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <wchar.h>
 
+#include "resource.h"
+
 #define APP_NAME L"Simple Notepad"
 #define ID_EDIT 101
 
@@ -117,6 +119,17 @@ static const wchar_t* BaseNameFromPath(const wchar_t* path) {
         return path;
     }
     return slash + 1;
+}
+
+static HICON LoadAppIcon(HINSTANCE instance, int width, int height) {
+    return (HICON)LoadImageW(
+        instance,
+        MAKEINTRESOURCEW(IDI_APPICON),
+        IMAGE_ICON,
+        width,
+        height,
+        0
+    );
 }
 
 static void UpdateWindowTitle(HWND hwnd) {
@@ -505,29 +518,8 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev, PWSTR cmd_line, int show
 
     const wchar_t* class_name = L"SimpleNotepadWindowClass";
 
-    SHFILEINFOW sfi_small;
-    ZeroMemory(&sfi_small, sizeof(sfi_small));
-    if (SHGetFileInfoW(
-            L"dummy.txt",
-            FILE_ATTRIBUTE_NORMAL,
-            &sfi_small,
-            sizeof(sfi_small),
-            SHGFI_ICON | SHGFI_SMALLICON | SHGFI_USEFILEATTRIBUTES
-        )) {
-        g_icon_small = sfi_small.hIcon;
-    }
-
-    SHFILEINFOW sfi_large;
-    ZeroMemory(&sfi_large, sizeof(sfi_large));
-    if (SHGetFileInfoW(
-            L"dummy.txt",
-            FILE_ATTRIBUTE_NORMAL,
-            &sfi_large,
-            sizeof(sfi_large),
-            SHGFI_ICON | SHGFI_LARGEICON | SHGFI_USEFILEATTRIBUTES
-        )) {
-        g_icon_big = sfi_large.hIcon;
-    }
+    g_icon_small = LoadAppIcon(instance, 16, 16);
+    g_icon_big = LoadAppIcon(instance, 32, 32);
 
     WNDCLASSEXW wc;
     ZeroMemory(&wc, sizeof(wc));
@@ -570,6 +562,7 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev, PWSTR cmd_line, int show
         { FVIRTKEY | FCONTROL, 'O', IDM_FILE_OPEN },
         { FVIRTKEY | FCONTROL, 'S', IDM_FILE_SAVE },
         { FVIRTKEY | FCONTROL | FSHIFT, 'S', IDM_FILE_SAVE_AS },
+        { FVIRTKEY | FCONTROL, 'A', IDM_EDIT_SELECT_ALL },
         { FVIRTKEY | FCONTROL, VK_OEM_PLUS, IDM_VIEW_TEXT_SIZE_INCREASE },
         { FVIRTKEY | FCONTROL, VK_ADD, IDM_VIEW_TEXT_SIZE_INCREASE },
         { FVIRTKEY | FCONTROL, VK_OEM_MINUS, IDM_VIEW_TEXT_SIZE_DECREASE },
